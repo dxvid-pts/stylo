@@ -1,4 +1,4 @@
-#![recursion_limit = "1024"]
+#![recursion_limit = "2000000"]
 // Optional: only if you also hit E0272 "type length limit exceeded"
 #![type_length_limit = "2000000"]
 /* This Source Code Form is subject to the terms of the Mozilla Public
