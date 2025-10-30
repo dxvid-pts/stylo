@@ -1,3 +1,6 @@
+#![recursion_limit = "2000000"]
+// Optional: only if you also hit E0272 "type length limit exceeded"
+#![type_length_limit = "2000000"]
 // Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
