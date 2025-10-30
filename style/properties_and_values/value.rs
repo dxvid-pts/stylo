@@ -91,7 +91,7 @@ impl<L, N, P, LP, C, Image, U, Integer, A, T, R, Transform>
 
 /// A generic enum used for both specified value components and computed value components.
 #[derive(
-    Animate, Clone, ToCss, ToComputedValue, ToResolvedValue, Debug, MallocSizeOf, PartialEq, ToShmem,
+    Animate, Clone, ToCss, ToComputedValue, ToResolvedValue, MallocSizeOf, PartialEq, ToShmem,
 )]
 #[animation(no_bound(Image, Url))]
 pub enum GenericValueComponent<
@@ -201,7 +201,7 @@ impl<Component: ToCss> ToCss for ComponentList<Component> {
 /// A struct for a single specified registered custom property value that includes its original URL
 // data so the value can be uncomputed later.
 #[derive(
-    Clone, Debug, MallocSizeOf, PartialEq, ToCss, ToComputedValue, ToResolvedValue, ToShmem,
+    Clone, MallocSizeOf, PartialEq, ToCss, ToComputedValue, ToResolvedValue, ToShmem,
 )]
 pub struct Value<Component> {
     /// The registered custom property value.
@@ -238,7 +238,7 @@ impl<Component> Value<Component> {
 
 /// A specified registered custom property value.
 #[derive(
-    Animate, ToComputedValue, ToResolvedValue, ToCss, Clone, Debug, MallocSizeOf, PartialEq, ToShmem,
+    Animate, ToComputedValue, ToResolvedValue, ToCss, Clone, MallocSizeOf, PartialEq, ToShmem,
 )]
 pub enum ValueInner<Component> {
     /// A single specified component value whose syntax descriptor component did not have a
@@ -578,12 +578,21 @@ impl<'a> Parser<'a> {
 }
 
 /// An animated value for custom property.
-#[derive(Clone, Debug, MallocSizeOf, PartialEq)]
+#[derive(Clone, MallocSizeOf, PartialEq)]
 pub struct CustomAnimatedValue {
     /// The name of the custom property.
     pub(crate) name: crate::custom_properties::Name,
     /// The computed value of the custom property.
     value: ComputedValue,
+}
+
+impl fmt::Debug for CustomAnimatedValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("CustomAnimatedValue")
+            .field("name", &"..")
+            .field("value", &"..")
+            .finish()
+    }
 }
 
 impl Animate for CustomAnimatedValue {

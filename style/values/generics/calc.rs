@@ -184,7 +184,6 @@ pub type GenericCalcAnchorSizeFunction<L> = GenericAnchorSizeFunction<Box<Generi
 #[repr(u8)]
 #[derive(
     Clone,
-    Debug,
     Deserialize,
     MallocSizeOf,
     PartialEq,
@@ -249,6 +248,29 @@ pub enum GenericCalcNode<L> {
 }
 
 pub use self::GenericCalcNode as CalcNode;
+
+impl<L> fmt::Debug for GenericCalcNode<L> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Avoid deeply-recursive Debug output; provide a concise variant label.
+        let name = match self {
+            Self::Leaf(_) => "Leaf",
+            Self::Negate(_) => "Negate",
+            Self::Invert(_) => "Invert",
+            Self::Sum(_) => "Sum",
+            Self::Product(_) => "Product",
+            Self::MinMax(_, _) => "MinMax",
+            Self::Clamp { .. } => "Clamp",
+            Self::Round { .. } => "Round",
+            Self::ModRem { .. } => "ModRem",
+            Self::Hypot(_) => "Hypot",
+            Self::Abs(_) => "Abs",
+            Self::Sign(_) => "Sign",
+            Self::Anchor(_) => "Anchor",
+            Self::AnchorSize(_) => "AnchorSize",
+        };
+        write!(f, "CalcNode({})", name)
+    }
+}
 
 bitflags! {
     /// Expected units we allow parsing within a `calc()` expression.

@@ -45,7 +45,6 @@ bitflags! {
 /// https://drafts.csswg.org/css-color-5/#color-mix
 #[derive(
     Clone,
-    Debug,
     MallocSizeOf,
     PartialEq,
     ToAnimatedValue,
@@ -65,6 +64,13 @@ pub struct GenericColorMix<Color, Percentage> {
 }
 
 pub use self::GenericColorMix as ColorMix;
+
+impl<C, P> fmt::Debug for GenericColorMix<C, P> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Keep debug output lightweight to avoid huge type expansions.
+        f.write_str("color-mix(..)")
+    }
+}
 
 impl<Color: ToCss, Percentage: ToCss + ToPercentage> ToCss for ColorMix<Color, Percentage> {
     fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result

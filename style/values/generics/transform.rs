@@ -183,7 +183,6 @@ pub use self::GenericPerspectiveFunction as PerspectiveFunction;
 
 #[derive(
     Clone,
-    Debug,
     Deserialize,
     MallocSizeOf,
     PartialEq,
@@ -309,6 +308,43 @@ where
 }
 
 pub use self::GenericTransformOperation as TransformOperation;
+
+impl<A, N, L, I, LP> fmt::Debug for GenericTransformOperation<A, N, L, I, LP>
+where
+    A: crate::Zero,
+    N: PartialEq,
+    LP: crate::Zero + crate::ZeroNoPercent,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use GenericTransformOperation::*;
+        let name = match self {
+            Matrix(..) => "Matrix",
+            Matrix3D(..) => "Matrix3D",
+            Skew(..) => "Skew",
+            SkewX(..) => "SkewX",
+            SkewY(..) => "SkewY",
+            Translate(..) => "Translate",
+            TranslateX(..) => "TranslateX",
+            TranslateY(..) => "TranslateY",
+            TranslateZ(..) => "TranslateZ",
+            Translate3D(..) => "Translate3D",
+            Scale(..) => "Scale",
+            ScaleX(..) => "ScaleX",
+            ScaleY(..) => "ScaleY",
+            ScaleZ(..) => "ScaleZ",
+            Scale3D(..) => "Scale3D",
+            Rotate(..) => "Rotate",
+            RotateX(..) => "RotateX",
+            RotateY(..) => "RotateY",
+            RotateZ(..) => "RotateZ",
+            Rotate3D(..) => "Rotate3D",
+            Perspective(..) => "Perspective",
+            InterpolateMatrix { .. } => "InterpolateMatrix",
+            AccumulateMatrix { .. } => "AccumulateMatrix",
+        };
+        write!(f, "TransformOp({})", name)
+    }
+}
 
 #[derive(
     Clone,

@@ -207,7 +207,7 @@ impl ToResolvedValue for LengthPercentage {
 }
 
 /// An unpacked `<length-percentage>` that borrows the `calc()` variant.
-#[derive(Clone, Debug, PartialEq, ToCss)]
+#[derive(Clone, PartialEq, ToCss)]
 pub enum Unpacked<'a> {
     /// A `calc()` value
     Calc(&'a CalcLengthPercentage),
@@ -215,6 +215,17 @@ pub enum Unpacked<'a> {
     Length(Length),
     /// A percentage value
     Percentage(Percentage),
+}
+
+impl<'a> fmt::Debug for Unpacked<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let name = match self {
+            Self::Calc(_) => "Calc",
+            Self::Length(_) => "Length",
+            Self::Percentage(_) => "Percentage",
+        };
+        write!(f, "Unpacked({})", name)
+    }
 }
 
 /// An unpacked `<length-percentage>` that mutably borrows the `calc()` variant.
@@ -899,7 +910,7 @@ pub type CalcNode = calc::GenericCalcNode<CalcLengthPercentageLeaf>;
 
 /// The representation of a calc() function with mixed lengths and percentages.
 #[derive(
-    Clone, Debug, Deserialize, MallocSizeOf, Serialize, ToAnimatedZero, ToResolvedValue, ToCss,
+    Clone, Deserialize, MallocSizeOf, Serialize, ToAnimatedZero, ToResolvedValue, ToCss,
 )]
 #[repr(C)]
 pub struct CalcLengthPercentage {

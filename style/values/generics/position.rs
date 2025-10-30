@@ -267,7 +267,6 @@ impl<N> ToAnimatedZero for AspectRatio<N> {
     Animate,
     Clone,
     ComputeSquaredDistance,
-    Debug,
     MallocSizeOf,
     PartialEq,
     ToCss,
@@ -335,7 +334,6 @@ pub use self::GenericInset as Inset;
     Animate,
     Clone,
     ComputeSquaredDistance,
-    Debug,
     MallocSizeOf,
     PartialEq,
     SpecifiedValueInfo,
@@ -358,6 +356,24 @@ pub struct GenericAnchorFunction<Percentage, Fallback> {
     pub side: GenericAnchorSide<Percentage>,
     /// Value to use in case the anchor function is invalid.
     pub fallback: Optional<Fallback>,
+}
+
+impl<P, LP> std::fmt::Debug for GenericInset<P, LP> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Avoid infinitely-recursive Debug due to self-referential generics.
+        f.write_str("Inset(..)")
+    }
+}
+
+impl<Percentage, Fallback> std::fmt::Debug for GenericAnchorFunction<Percentage, Fallback> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Keep debug formatting concise to prevent deep expansions.
+        f.debug_struct("AnchorFunction")
+            .field("target_element", &"..")
+            .field("side", &"..")
+            .field("fallback", &"..")
+            .finish()
+    }
 }
 
 impl<Percentage, Fallback> ToCss for GenericAnchorFunction<Percentage, Fallback>

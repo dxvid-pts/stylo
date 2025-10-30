@@ -9,11 +9,12 @@ use crate::properties_and_values::value::ComputedValue as ComputedRegisteredValu
 use crate::selector_map::PrecomputedHasher;
 use indexmap::IndexMap;
 use servo_arc::Arc;
+use std::fmt;
 use std::hash::BuildHasherDefault;
 
 /// A map for a set of custom properties, which implements copy-on-write behavior on insertion with
 /// cheap copying.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct CustomPropertiesMap(Arc<Inner>);
 
 impl Default for CustomPropertiesMap {
@@ -37,7 +38,7 @@ lazy_static! {
     };
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct Inner {
     own_properties: OwnMap,
     parent: Option<Arc<Inner>>,
@@ -46,6 +47,24 @@ struct Inner {
     len: usize,
     /// The number of ancestors we have.
     ancestor_count: u8,
+}
+
+impl fmt::Debug for CustomPropertiesMap {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("CustomPropertiesMap")
+            .field("len", &self.len())
+            .finish()
+    }
+}
+
+impl fmt::Debug for Inner {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Inner")
+            .field("own_properties_len", &self.own_properties.len())
+            .field("len", &self.len)
+            .field("ancestor_count", &self.ancestor_count)
+            .finish()
+    }
 }
 
 /// A not-too-large, not too small ancestor limit, to prevent creating too-big chains.
